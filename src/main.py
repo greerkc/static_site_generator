@@ -1,7 +1,17 @@
 from textnode import TextType, TextNode
 import os
 import shutil
-from markdown import generate_page
+from markdown import generate_page	
+import sys
+
+#basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
+#print(f"Using basepath: {basepath}")
+
+print(f"DEBUG: sys.argv = {sys.argv}")
+print(f"DEBUG: len(sys.argv) = {len(sys.argv)}")
+basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
+print(f"Using basepath: {basepath}")
+ 
 #def main():
 	#node = TextNode("Test text", TextType.BOLD, "http://dog.com")
 	#print(node)
@@ -44,7 +54,7 @@ def remove_first_dir(path):
     trimmed = os.path.join(*parts[1:])  # Skip the first directory
     return trimmed
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath="/"):
 	#print(f"Generating pages in directory: {dir_path_content}")
 	index_md = find_files_by_extension(dir_path_content, '.md')
 	#print(f"Found markdown files: {index_md}")
@@ -52,10 +62,10 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 	#	print(f"Processing markdown file: {md_file}")
 		stripped_path = remove_first_dir(md_file)
 	#	print(f"Stripped path: {stripped_path}")
-		newdir = replicate_dir_structure_from_cwd(stripped_path, 'public') ##md_file, 'public')
+		newdir = replicate_dir_structure_from_cwd(stripped_path, 'docs') ##md_file, 'docs')
 		newdir = os.path.join(newdir, 'index.html')
 	#	print(f"New directory for generated page: {newdir}")
-		generate_page(md_file, 'template.html', newdir) #'public')
+		generate_page(md_file, 'template.html', newdir, basepath) #'public')
 	
 def copy_recursive(src, dst):
 	if not os.path.exists(src):
@@ -96,11 +106,23 @@ def copy_recursive(src, dst):
 
 if __name__ == "__main__":
 	#	main()
-	copy_recursive('static', 'public')
+	#copy_recursive('static', 'public')
 	#generate_page('content/index.md', 'template.html', 'public/index.html')
 	#generate_page('content/blog/glorfindel/index.md', 'template.html', 'public/index.html')
 	#generate_page('content/blog/tom/index.md', 'template.html', 'public/index.html')
 	#generate_page('content/blog/majesty/index.md', 'template.html', 'public/index.html')
 	#generate_page('content/contact/index.md', 'template.html', 'public/index.html')
-	generate_pages_recursive('content', 'template.html', 'public')
+	#generate_pages_recursive('content', 'template.html', 'public')
+
+
+	# Get basepath from CLI argument, default to "/"
+	basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
+
+	print(f"Using basepath: {basepath}")
+	#generate_pages_recursive('content/index.md', 'template.html', basepath + '/index.html')
+	#generate_page('content/index.md', 'template.html', basepath + '/index.html')
+	generate_pages_recursive('content', 'template.html', 'docs', basepath)
+	generate_page('content/index.md', 'template.html', 'docs/index.html', basepath)
+
+ 
  

@@ -229,7 +229,7 @@ def extract_title(markdown):
 
 import os
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath="/"):
 	base_dir = os.getcwd()
 	print(f"Running from: {base_dir}")
 
@@ -260,31 +260,25 @@ def generate_page(from_path, template_path, dest_path):
 	with open(template_path, 'r', encoding='utf-8') as f:
 		template_content = f.read()
 
-	# Convert markdown to HTML
-	#from markdown_to_html_node import markdown_to_html_node
-	#DEBUG...
-	#print(f"DEBUG: markdown content: {markdown_content}")
 	node = markdown_to_html_node(markdown_content)
-	# After this line: node = markdown_to_html_node(markdown_content)
-	print(f"DEBUG: Type of node: {type(node)}")
-	print(f"DEBUG: Node object: {node}")
-
-
-	#print(type(node))
-	#print("Should have answer now")
-	#End of DEBUG
 	html_content = node.to_html()
-	# After this line: html_content = node.to_html()
-	print(f"DEBUG: Type of html_content: {type(html_content)}")
-	print(f"DEBUG: First 200 chars of html_content: {html_content[:200]}")
-	#html_content = markdown_to_html_node(markdown_content).to_html()
+	
 
 	# Extract title
-	#from extract_title import extract_title
 	title = extract_title(markdown_content)
 
 	# Fill in the template
 	final_html = template_content.replace("{{ Title }}", title).replace("{{ Content }}", html_content)
+	
+	print(f"Processing file: {from_path} with basepath: {basepath}")
+	print(f"DEBUG: basepath = '{basepath}'")
+	print(f"DEBUG: Before replacement: {final_html[:200]}")  # First 200 chars
+	final_html = final_html.replace('href="/', f'href="{basepath}')
+	final_html = final_html.replace('src="/', f'src="{basepath}')
+	print(f"DEBUG: After replacement: {final_html[:200]}")	
+ 	# After your existing template replacements
+	#final_html = final_html.replace('href="/', f'href="{basepath}')
+	#final_html = final_html.replace('src="/', f'src="{basepath}')
 
 	# Write output
 	with open(dest_path, 'w', encoding='utf-8') as f:
