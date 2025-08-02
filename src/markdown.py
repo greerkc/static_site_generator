@@ -270,12 +270,12 @@ def generate_page(from_path, template_path, dest_path, basepath="/"):
 	# Fill in the template
 	final_html = template_content.replace("{{ Title }}", title).replace("{{ Content }}", html_content)
 	
-	print(f"Processing file: {from_path} with basepath: {basepath}")
-	print(f"DEBUG: basepath = '{basepath}'")
-	print(f"DEBUG: Before replacement: {final_html[:200]}")  # First 200 chars
+	#print(f"Processing file: {from_path} with basepath: {basepath}")
+	#print(f"DEBUG: basepath = '{basepath}'")
+	#print(f"DEBUG: Before replacement: {final_html[:200]}")  # First 200 chars
 	final_html = final_html.replace('href="/', f'href="{basepath}')
 	final_html = final_html.replace('src="/', f'src="{basepath}')
-	print(f"DEBUG: After replacement: {final_html[:200]}")	
+	#print(f"DEBUG: After replacement: {final_html[:200]}")	
  	# After your existing template replacements
 	#final_html = final_html.replace('href="/', f'href="{basepath}')
 	#final_html = final_html.replace('src="/', f'src="{basepath}')
